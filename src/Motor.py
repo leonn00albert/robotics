@@ -48,8 +48,8 @@ class MotorDriver():
 
 
 class MotionController():
-    def __init__(self,motorDriver):
-        self.motor = motorDriver
+    def __init__(self):
+        self.motor = MotorDriver()
         self.left_motor = 1
         self.right_motor = 0
         self.left_motor_forward = 'forward'

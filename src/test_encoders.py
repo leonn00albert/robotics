@@ -18,7 +18,6 @@ class EncoderCounter(object):
 
 
 
-Driver = MotorDriver()
 Motor = MotionController(Driver)
 
 #test

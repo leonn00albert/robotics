@@ -25,21 +25,18 @@ class MotorDriver():
         if(motor == 0):
             pwm.setDutycycle(self.PWMA, speed)
             if(index == Dir[0]):
-                print ("1")
                 pwm.setLevel(self.AIN1, 0)
                 pwm.setLevel(self.AIN2, 1)
             else:
-                print ("2")
                 pwm.setLevel(self.AIN1, 1)
                 pwm.setLevel(self.AIN2, 0)
         else:
             pwm.setDutycycle(self.PWMB, speed)
             if(index == Dir[0]):
-                print ("3")
                 pwm.setLevel(self.BIN1, 0)
                 pwm.setLevel(self.BIN2, 1)
             else:
-                print ("4")
+           
                 pwm.setLevel(self.BIN1, 1)
                 pwm.setLevel(self.BIN2, 0)
 
@@ -60,10 +57,12 @@ class MotionController():
         self.left_motor_backward = 'backward'
         self.right_motor_backward= 'forward'  #the dc motor is mounted mirrored
 
-    def forward(self, speed=100,timeout=2):
+    def forward(self, speed=100,timeout=0):
         self.motor.MotorRun(self.left_motor, self.left_motor_forward , speed)
         self.motor.MotorRun(self.right_motor, self.right_motor_forward , speed)
-        time.sleep(timeout)
+        if(timeout > 0):
+            time.sleep(timeout)
+        
 
     def backward(self, speed=100,timeout=2):
         self.motor.MotorRun(self.left_motor, self.left_motor_backward , speed)
@@ -92,14 +91,3 @@ class MotionController():
         self.motor.MotorStop(self.right_motor)
 
 
-Driver = MotorDriver()
-Motor = MotionController(Driver)
-
-#test
-
-Motor.forward(60,5)
-Motor.stop()
-Motor.turn_cw(40,1)
-Motor.stop()
-Motor.backward(30,3)
-Motor.stop()

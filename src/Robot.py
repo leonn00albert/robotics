@@ -3,11 +3,15 @@ from Motor import MotionController
 from encoder_counter import EncoderCounter
 
 class Robot():
+    wheel_diameter_mm = 69.0
+    ticks_per_revolution = 40.0
+    wheel_distance_mm =  131.0
+
     def __init__(self):
-        self.left_encoder = EncoderCounter(pin_number=4)
-        self.right_encoder = EncoderCounter(pin_number=26)
+   
         self.motor = MotionController()
-        self.left_encoder.stop()
-        self.right_encoder.stop()
+ 
 
-
+        EncoderCounter.set_constants(self.wheel_diameter_mm, self.ticks_per_revolution)
+        self.left_encoder = EncoderCounter(4)
+        self.right_encoder = EncoderCounter(26)

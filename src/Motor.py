@@ -20,7 +20,7 @@ class MotorDriver():
         self.BIN2 = 4
 
     def MotorRun(self, motor, index, speed):
-        if speed > 100:
+        if(speed > 100):
             return
         if(motor == 0):
             pwm.setDutycycle(self.PWMA, speed)
@@ -71,13 +71,25 @@ class MotionController():
             time.sleep(timeout)
         
 
-    def set_left(self, speed=100,timeout=0):
-        self.motor.MotorRun(self.left_motor, self.left_motor_forward , speed)
+    def set_left(self, speed=100,direction = 1,timeout=0):
+        if(speed > 100):
+            speed = 100
+        if(direction == 1):
+            self.motor.MotorRun(self.left_motor, self.left_motor_forward , speed)
+        else:
+            self.motor.MotorRun(self.left_motor, self.left_motor_backward , speed)
+
         if(timeout > 0):
             time.sleep(timeout)
         
-    def set_right(self, speed=100,timeout=0):
-        self.motor.MotorRun(self.right_motor, self.right_motor_forward , speed)
+    def set_right(self, speed=100,direction=1,timeout=0):
+        if(speed > 100):
+            speed = 100
+        if(direction == 1):
+            self.motor.MotorRun(self.right_motor, self.right_motor_forward , speed)
+        else:
+            self.motor.MotorRun(self.right_motor, self.right_motor_backward , speed)
+
         if(timeout > 0):
             time.sleep(timeout)
         

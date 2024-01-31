@@ -3,8 +3,8 @@ from pid_controller import PIController
 import time
 
 bot = Robot()
-stop_at_time = time.time() + 15
-
+time.sleep(1)
+stop_at_time = time.time() + 4
 speed = 40
 bot.motor.set_right(speed)
 bot.motor.set_left(speed)

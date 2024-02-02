@@ -71,9 +71,3 @@ class Status():
         self.strip.show()
         time.sleep(1)
 
-status = Status()
-
-status.error(1)
-status.ok(2)
-status.warning(2)
-status.info(3)

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Robot Control</title>
+    <style>
+        .controller {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .slider {
+            width: 80%;
+            margin-top: 20px;
+        }
+
+        #joystick-container {
+            width: 200px;
+            height: 200px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Current Robot Command: {{ command }}</h1>
+    
+    <div class="controller">
+        <button class="button" onclick="sendCommand('forward')">Forward</button>
+        <div>
+            <button class="button" onclick="sendCommand('left')">Left</button>
+            <button class="button" onclick="sendCommand('right')">Right</button>
+        </div>
+        <button class="button" onclick="sendCommand('backward')">Backward</button>
+
+        <!-- Speed slider -->
+        <label for="speed">Speed:</label>
+        <input type="range" id="speed" name="speed" class="slider" min="0" max="100" value="60">
+
+        <!-- Distance slider -->
+        <label for="distance">Distance:</label>
+        <input type="range" id="distance" name="distance" class="slider" min="0" max="500" value="100">
+
+        <!-- Joystick control -->
+        <div id="joystick-container"></div>
+    </div>
+
+    <script>
+        function sendCommand(command) {
+            // Get the values from the sliders
+            const speed = document.getElementById('speed').value;
+            const distance = document.getElementById('distance').value;
+
+            // Send the command with speed and distance parameters
+            fetch(`/${command}?speed=${speed}&distance=${distance}`)
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                });
+        }
+
+        // Joystick control
+        const joystick = new VirtualJoystick({
+            container: document.getElementById('joystick-container'),
+            mouseSupport: true,
+            stationaryBase: true,
+            baseX: 100,
+            baseY: 100
+        });
+
+        setInterval(() => {
+            // Get the joystick direction and magnitude
+            const direction = joystick.deltaY() / 100; // Normalize to [-1, 1]
+            const magnitude = joystick.deltaX() / 100; // Normalize to [-1, 1]
+
+            // Use direction and magnitude to compute speed and distance
+            const speed = magnitude * 100; // Scale to your desired speed range
+            const distance = Math.abs(direction) * 500; // Scale to your desired distance range
+
+            // Update sliders and send command
+            document.getElementById('speed').value = speed;
+            document.getElementById('distance').value = distance;
+            sendCommand('joystick');
+        }, 100);
+    </script>
+</body>
+</html>

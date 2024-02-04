@@ -7,7 +7,7 @@ logger = logging.getLogger("drive_distance")
 class Drive():
     def __init__(self,bot):
         self.bot = bot;         
-    def distances(self,left_distance, right_distance, speed=60):
+    def distances(self,left_distance, right_distance, speed=60,backward=1):
 
         if abs(left_distance) >= abs(right_distance):
             print("Left is primary")
@@ -30,7 +30,6 @@ class Drive():
 
         primary_to_secondary_ratio = secondary_distance / (primary_distance * 1.0)
         secondary_speed = speed * primary_to_secondary_ratio
-        print("Targets - primary: %d, secondary: %d, ratio: %.2f" % (primary_distance, secondary_distance, primary_to_secondary_ratio))
 
 
         primary_encoder.reset()
@@ -79,3 +78,56 @@ class Drive():
         print ("Arc left distance {}, right_distance {}".format(left_distance, right_distance))
         self.distances(left_distance, right_distance, speed=speed)
 
+    def distances_backward(self,left_distance, right_distance, speed=-60):
+
+        if abs(left_distance) >= abs(right_distance):
+            print("Left is primary")
+            set_primary        = self.bot.motor.set_left
+            primary_encoder    = self.bot.left_encoder
+            set_secondary      = self.bot.motor.set_right
+            secondary_encoder  = self.bot.right_encoder
+            primary_distance   = left_distance
+            secondary_distance = right_distance
+        else:
+            print("right is primary")
+            set_primary        = self.bot.motor.set_right
+            primary_encoder    = self.bot.right_encoder
+            set_secondary      = self.bot.motor.set_left
+            secondary_encoder  = self.bot.left_encoder
+            primary_distance   = right_distance
+            secondary_distance = left_distance
+
+
+
+        primary_to_secondary_ratio = secondary_distance / (primary_distance * 1.0)
+        secondary_speed = speed * primary_to_secondary_ratio
+
+
+        primary_encoder.reset()
+        secondary_encoder.reset()
+        
+        controller = PIController(proportional_constant=4, integral_constant=0.2)
+
+        # Ensure that the encoder knows which way it is going
+        primary_encoder.set_direction(math.copysign(1, speed))
+        secondary_encoder.set_direction(math.copysign(1, secondary_speed))
+        set_primary(speed)
+        set_secondary(secondary_speed)
+
+        while abs(primary_encoder.pulse_count) < abs(primary_distance) or abs(secondary_encoder.pulse_count) < abs(secondary_distance):        
+            time.sleep(0.02)
+            secondary_target = primary_encoder.pulse_count * primary_to_secondary_ratio
+            error = secondary_target - secondary_encoder.pulse_count
+            adjustment = controller.get_value(error)
+            set_primary(speed - adjustment,-1)
+
+            secondary_encoder.set_direction(math.copysign(1, secondary_speed+adjustment))
+            set_secondary(secondary_speed + adjustment,-1)
+
+            print(f"Encoders : primary: {primary_encoder.pulse_count}, secondary: {secondary_encoder.pulse_count}" )
+            print(f"Distances : primary: {primary_encoder.distance_in_mm()}, secondary: {secondary_encoder.distance_in_mm()}" )
+
+            if abs(primary_encoder.pulse_count) >= abs(primary_distance):
+                print("primary stop")
+                set_primary(0)
+                secondary_speed = 0

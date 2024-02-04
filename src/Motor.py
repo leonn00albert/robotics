@@ -55,7 +55,7 @@ class MotionController():
         self.left_motor_forward = 'backward'
         self.right_motor_forward = 'forward'  #the dc motor is mounted mirrored
         self.left_motor_backward = 'forward'
-        self.right_motor_backward= 'backward'  #the dc motor is mounted mirrored
+        self.right_motor_backward = 'backward'  #the dc motor is mounted mirrored
 
     def forward(self, speed=100,timeout=0):
         self.motor.MotorRun(self.left_motor, self.left_motor_forward , speed)

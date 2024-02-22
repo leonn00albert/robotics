@@ -27,11 +27,23 @@
             height: 200px;
             margin-top: 20px;
         }
+
+        #video-feed {
+            margin-top: 20px;
+            width: 640px; /* Adjust width as needed */
+            height: 480px; /* Adjust height as needed */
+        }
     </style>
 </head>
 <body>
     <h1>Current Robot Command: {{ command }}</h1>
     
+    <video id="liveVideo" controls autoplay>
+        <!-- The source URL will be provided by your streaming server -->
+        <source src="/video" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
     <div class="controller">
         <button class="button" onclick="sendCommand('forward')">Forward</button>
         <div>
@@ -59,7 +71,7 @@
             const distance = document.getElementById('distance').value;
 
             // Send the command with speed and distance parameters
-            fetch(`/${command}?speed=${speed}&distance=${distance}`)
+            fetch(`http://robot.local:5000/${command}?speed=${speed}&distance=${distance}`)
                 .then(response => response.text())
                 .then(data => {
                     console.log(data);
@@ -67,28 +79,8 @@
         }
 
         // Joystick control
-        const joystick = new VirtualJoystick({
-            container: document.getElementById('joystick-container'),
-            mouseSupport: true,
-            stationaryBase: true,
-            baseX: 100,
-            baseY: 100
-        });
 
-        setInterval(() => {
-            // Get the joystick direction and magnitude
-            const direction = joystick.deltaY() / 100; // Normalize to [-1, 1]
-            const magnitude = joystick.deltaX() / 100; // Normalize to [-1, 1]
-
-            // Use direction and magnitude to compute speed and distance
-            const speed = magnitude * 100; // Scale to your desired speed range
-            const distance = Math.abs(direction) * 500; // Scale to your desired distance range
-
-            // Update sliders and send command
-            document.getElementById('speed').value = speed;
-            document.getElementById('distance').value = distance;
-            sendCommand('joystick');
-        }, 100);
+       
     </script>
 </body>
 </html>

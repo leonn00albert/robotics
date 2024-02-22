@@ -62,4 +62,4 @@ def backward():
     return "Backward command sent"
 
 if __name__ == '__main__':
-    app.run(host='192.168.0.16', port=5000, debug=True)
+    app.run(host='robot.local', port=5000, debug=True)

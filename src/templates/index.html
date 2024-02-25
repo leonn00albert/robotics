@@ -63,7 +63,16 @@
         <!-- Joystick control -->
         <div id="joystick-container"></div>
     </div>
-
+    <div>
+        <button class="button" onclick="sendPanTiltCommand('pan_tilt', 0, 0, 0, 90)">Up</button>
+    </div>
+    <div>
+        <button class="button" onclick="sendPanTiltCommand('pan_tilt', 0, 0, -90, 0)">Left</button>
+        <button class="button" onclick="sendPanTiltCommand('pan_tilt', 0, 0, 90, 0)">Right</button>
+    </div>
+    <div>
+        <button class="button" onclick="sendPanTiltCommand('pan_tilt', 0, 0, 0, -90)">Down</button>
+    </div>
     <script>
         function sendCommand(command) {
             // Get the values from the sliders
@@ -75,6 +84,15 @@
                 .then(response => response.text())
                 .then(data => {
                     console.log(data);
+                });
+        }
+
+        function sendPanTiltCommand(command, speed, distance, pan, tilt) {
+            fetch(`http://robot.local:5000/pantilt?pan=${pan}&tilt=${tilt}`)
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    document.getElementById('currentCommand').innerText = command;
                 });
         }
 

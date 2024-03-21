@@ -21,7 +21,7 @@ app.get('/video', (req, res) => {
         '-movflags', 'frag_keyframe+empty_moov', // Flags for streaming-friendly MP4
         '-reset_timestamps', '1', // Reset timestamps for streaming
         '-vcodec', 'copy', // Use same video codec (H.264)
-        '-r', '25', // Framerate (adjust as needed)
+        '-r', '30', // Framerate (adjust as needed)
         '-y', // Overwrite output file if it exists
         'pipe:1' // Output to stdout
     ]);

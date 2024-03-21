@@ -1,9 +1,7 @@
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
-from Robot import Robot, EncoderCounter
 
-bot = Robot()
 
 # This variable will store the current robot command
 robot_command = ""
@@ -21,7 +19,6 @@ def forward():
     distance_in_ticks = EncoderCounter.mm_to_ticks(distance)
     bot.drive.distances(distance_in_ticks, distance_in_ticks)
     bot.motor.stop()
-    robot_command = f"Forward with distance {distance} and speed {speed}"
     # Add code to send forward command to the robot
     return "Forward command sent"
 
@@ -34,7 +31,6 @@ def left():
     distance_in_ticks = EncoderCounter.mm_to_ticks(distance)
     bot.drive.distances(0, distance_in_ticks)
     bot.motor.stop()
-    robot_command = f"Left with distance {distance} and speed {speed}"
     # Add code to send left command to the robot
     return "Left command sent"
 
@@ -47,7 +43,6 @@ def right():
     distance_in_ticks = EncoderCounter.mm_to_ticks(distance)
     bot.drive.distances(distance_in_ticks, 0)
     bot.motor.stop()
-    robot_command = f"Right with distance {distance} and speed {speed}"
     # Add code to send right command to the robot
     return "Right command sent"
 
@@ -57,7 +52,6 @@ def backward():
     speed = int(request.args.get('speed', 60))  # Default to 60 if not provided
 
     bot.motor.stop()
-    robot_command = f"Backward with speed {speed}"
     # Add code to send backward command to the robot
     return "Backward command sent"
 

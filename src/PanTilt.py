@@ -1,6 +1,5 @@
-from gpiozero import AngularServo
 from time import sleep
-
+from gpiozero import AngularServo
 class PanTilt:
     def __init__(self, pan_pin, tilt_pin, min_angle=-90, max_angle=90, min_pulse_width=0.0006, max_pulse_width=0.0023):
         self.pan_servo = AngularServo(pan_pin, min_angle=min_angle, max_angle=max_angle, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)

@@ -53,7 +53,10 @@ install the library on the Raspberry Pi with:
 pip install git+https://github.com/orionrobots/Raspi_MotorHAT
 
 ```
-
+Install LED drivers
+```bash
+sudo pip install rpi_ws281x
+```
 enable I2C and SPI in raspi-config
 
 
@@ -68,8 +71,5 @@ Motor test
 ```
 ./test.sh motor
 ```
-Install LED drivers
-```bash
-sudo pip install rpi_ws281x
-```
+
 ![](https://i.postimg.cc/cHY9B0RW/IMG-20240320-212820-127.jpg)

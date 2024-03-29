@@ -1,5 +1,4 @@
 ﻿# Robotics Setup Guide
-
 ## Hardware
 
 - **Raspberry Pi Model:** RPI 3a+
@@ -69,3 +68,8 @@ Motor test
 ```
 ./test.sh motor
 ```
+Install LED drivers
+```bash
+sudo pip install rpi_ws281x
+```
+![](https://i.postimg.cc/cHY9B0RW/IMG-20240320-212820-127.jpg)

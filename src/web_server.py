@@ -1,17 +1,42 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template,Response, request
+import time
+import pi_camera_stream
+from Robot import Robot, EncoderCounter
+
 
 app = Flask(__name__)
-from Robot import Robot, EncoderCounter
+
+
+
+
 
 bot = Robot()
 
 # This variable will store the current robot command
 robot_command = ""
 
+
 @app.route('/')
 def index():
     return render_template('index.html', command=robot_command)
 
+
+def frame_generator():
+    """This is our main video feed"""
+    camera = pi_camera_stream.setup_camera()
+
+    # allow the camera to warmup
+    time.sleep(0.1)
+
+    for frame in pi_camera_stream.start_stream(camera):
+        encoded_bytes = pi_camera_stream.get_encoded_bytes_for_frame(frame)
+        # Need to turn this into http multipart data.
+        yield (b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + encoded_bytes + b'\r\n')
+@app.route('/display')
+def display():
+    return Response(frame_generator(),
+        mimetype='multipart/x-mixed-replace; boundary=frame')
 @app.route('/forward')
 def forward():
     global robot_command
@@ -61,5 +86,6 @@ def backward():
     # Add code to send backward command to the robot
     return "Backward command sent"
 
+
 if __name__ == '__main__':
-    app.run(host='robot.local', port=5000, debug=True)
+    app.run(host='nodebot.local', port=5000, debug=True)

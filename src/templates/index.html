@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Robot Control</title>
+    <style>
+        .controller {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .slider {
+            width: 80%;
+            margin-top: 20px;
+        }
+
+        #joystick-container {
+            width: 200px;
+            height: 200px;
+            margin-top: 20px;
+        }
+
+        #video-feed {
+            margin-top: 20px;
+            width: 640px; /* Adjust width as needed */
+            height: 480px; /* Adjust height as needed */
+        }
+    </style>
+</head>
+<body>
+    <h1>Current Robot Command: {{ command }}</h1>
+    
+    <h1>Robot Image Server</h1>
+    <img src="{{ url_for('display') }}">
+
+    <div class="controller">
+        <button class="button" onclick="sendCommand('forward')">Forward</button>
+        <div>
+            <button class="button" onclick="sendCommand('left')">Left</button>
+            <button class="button" onclick="sendCommand('right')">Right</button>
+        </div>
+        <button class="button" onclick="sendCommand('backward')">Backward</button>
+
+        <!-- Speed slider -->
+        <label for="speed">Speed:</label>
+        <input type="range" id="speed" name="speed" class="slider" min="0" max="100" value="60">
+
+        <!-- Distance slider -->
+        <label for="distance">Distance:</label>
+        <input type="range" id="distance" name="distance" class="slider" min="0" max="500" value="100">
+
+        <!-- Joystick control -->
+        <div id="joystick-container"></div>
+    </div>
+    <div>
+        <button class="button" onclick="sendPanTiltCommand('pan_tilt', 0, 0, 0, 90)">Up</button>
+    </div>
+    <div>
+        <button class="button" onclick="sendPanTiltCommand('pan_tilt', 0, 0, -90, 0)">Left</button>
+        <button class="button" onclick="sendPanTiltCommand('pan_tilt', 0, 0, 90, 0)">Right</button>
+    </div>
+    <div>
+        <button class="button" onclick="sendPanTiltCommand('pan_tilt', 0, 0, 0, -90)">Down</button>
+    </div>
+    <script>
+        function sendCommand(command) {
+            // Get the values from the sliders
+            const speed = document.getElementById('speed').value;
+            const distance = document.getElementById('distance').value;
+
+            // Send the command with speed and distance parameters
+            fetch(`http://nodebot.local:5000/${command}?speed=${speed}&distance=${distance}`)
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                });
+        }
+
+        function sendPanTiltCommand(command, speed, distance, pan, tilt) {
+            fetch(`http://nodebot.local:5000/pantilt?pan=${pan}&tilt=${tilt}`)
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    document.getElementById('currentCommand').innerText = command;
+                });
+        }
+
+        // Joystick control
+
+       
+    </script>
+
+
+</body>
+</html>

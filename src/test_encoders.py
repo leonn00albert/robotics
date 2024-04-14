@@ -18,7 +18,7 @@ class EncoderCounter(object):
 
 
 
-Motor = MotionController(Driver)
+Motor = MotionController()
 
 #test
 left_encoder = EncoderCounter(4)

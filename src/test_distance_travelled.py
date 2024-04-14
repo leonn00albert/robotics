@@ -15,7 +15,7 @@ def ticks_to_mm(ticks):
 bot = Robot()
 stop_at_time = time.time() +3
 
-bot.motor.forward(30)
+bot.motor.forward(40)
 
 
 while time.time() < stop_at_time:

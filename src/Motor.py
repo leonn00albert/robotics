@@ -20,7 +20,7 @@ class MotorDriver():
         self.BIN2 = 4
 
     def MotorRun(self, motor, index, speed):
-        if speed > 100:
+        if(speed > 100):
             return
         if(motor == 0):
             pwm.setDutycycle(self.PWMA, speed)
@@ -50,12 +50,12 @@ class MotorDriver():
 class MotionController():
     def __init__(self):
         self.motor = MotorDriver()
-        self.left_motor = 1
-        self.right_motor = 0
-        self.left_motor_forward = 'forward'
-        self.right_motor_forward = 'backward'  #the dc motor is mounted mirrored
-        self.left_motor_backward = 'backward'
-        self.right_motor_backward= 'forward'  #the dc motor is mounted mirrored
+        self.left_motor = 0
+        self.right_motor = 1
+        self.left_motor_forward = 'backward'
+        self.right_motor_forward = 'forward'  #the dc motor is mounted mirrored
+        self.left_motor_backward = 'forward'
+        self.right_motor_backward = 'backward'  #the dc motor is mounted mirrored
 
     def forward(self, speed=100,timeout=0):
         self.motor.MotorRun(self.left_motor, self.left_motor_forward , speed)
@@ -64,27 +64,49 @@ class MotionController():
             time.sleep(timeout)
         
 
-    def backward(self, speed=100,timeout=2):
+    def backward(self, speed=100,timeout=0):
         self.motor.MotorRun(self.left_motor, self.left_motor_backward , speed)
         self.motor.MotorRun(self.right_motor, self.right_motor_backward , speed)
-        time.sleep(timeout)
-
-    def set_left(self, speed=100,timeout=2):
-        self.motor.MotorRun(self.left_motor, self.left_motor_forward , speed)
-        time.sleep(timeout)
-    def set_right(self, speed=100,timeout=2):
-        self.motor.MotorRun(self.right_motor, self.right_motor_forward , speed)
-        time.sleep(timeout)
+        if(timeout > 0):
+            time.sleep(timeout)
         
-    def turn_cw(self, speed=100,timeout=2):
+
+    def set_left(self, speed=100,direction = 1,timeout=0):
+        if(speed > 100):
+            speed = 100
+        if(direction == 1):
+            self.motor.MotorRun(self.left_motor, self.left_motor_forward , speed)
+        else:
+            self.motor.MotorRun(self.left_motor, self.left_motor_backward , speed)
+
+        if(timeout > 0):
+            time.sleep(timeout)
+        
+    def set_right(self, speed=100,direction=1,timeout=0):
+        if(speed > 100):
+            speed = 100
+        if(direction == 1):
+            self.motor.MotorRun(self.right_motor, self.right_motor_forward , speed)
+        else:
+            self.motor.MotorRun(self.right_motor, self.right_motor_backward , speed)
+
+        if(timeout > 0):
+            time.sleep(timeout)
+        
+        
+    def turn_cw(self, speed=100,timeout=0):
         self.motor.MotorRun(self.left_motor, self.left_motor_forward , speed)
         self.motor.MotorRun(self.right_motor, self.right_motor_backward , speed)
-        time.sleep(timeout)
+        if(timeout > 0):
+            time.sleep(timeout)
+        
 
     def turn_ccw(self, speed=100,timeout=2):
         self.motor.MotorRun(self.right_motor, self.right_motor_forward , speed)
         self.motor.MotorRun(self.left_motor, self.left_motor_backward , speed)
-        time.sleep(timeout)
+        if(timeout > 0):
+            time.sleep(timeout)
+        
     
     def stop(self):
         self.motor.MotorStop(self.left_motor)

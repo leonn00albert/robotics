@@ -2,7 +2,6 @@ import time
 import logging
 import math
 from Robot import Robot
-from gpiozero import DigitalInputDevice
 
 logger = logging.getLogger('test_distance_travelled')
 
